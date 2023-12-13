@@ -8,9 +8,11 @@
 # cmake -DCMAKE_TOOLCHAIN_FILE=toolchain_crosscomp_arm.cmake ..
 #  -DARM_SYSROOTSysroot="absolute path to the sysroot folder"
 
-set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR})
+set(ARM_SYSROOT /mnt/fpga)
 
-#set(ARM_SYSROOT /group/xrlabs2/platforms/vck190_air_prod_2021.2_sysroot CACHE STRING "" FORCE)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} ${CMAKE_CURRENT_LIST_DIR})
+set(HAVE_STEADY_CLOCK 0)
+set(HAVE_POSIX_REGEX 0)
 
 # give the system information
 SET (CMAKE_SYSTEM_NAME Linux)

@@ -31,3 +31,10 @@ air_project
 libadf.a
 *.elf
 *.elf.*
+build-aarch64
+
+# utils
+sandbox
+utils/llvm
+utils/mlir-aie
+utils/install-aarch64

@@ -1,0 +1,24 @@
+MLIR_DETECT PYTHON ENV CMAKE (LLVM source...)
+  find_package(Python3 EXACT ${LLVM_MINIMUM_PYTHON_VERSION} REQUIRED
+    COMPONENTS Interpreter ${_python_development_component} NumPy)
+  #find_package(Python3 ${LLVM_MINIMUM_PYTHON_VERSION}
+  #  COMPONENTS Interpreter ${_python_development_component} NumPy REQUIRED)
+
+./cross-build-llvm.sh /home/alexander/workspace/vck190/mlir-air/cmake/modules/toolchain_crosscomp_arm.cmake /mnt/fpga
+./clone-mlir-aie.sh
+Add 
+./cross-build-mlir-aie.sh /home/alexander/workspace/aiengine/mlir-air/cmake/modules/toolchain_crosscomp_arm.cmake /mnt/fpga /home/alexander/workspace/aiengine/mlir-air/utils/mlir-aie/cmake/modulesXilinx /home/alexander/workspace/aiengine/mlir-air/utils/llvm
+./cross-build-mlir-air.sh /home/alexander/workspace/aiengine/mlir-air/cmake/modules/toolchain_crosscomp_arm.cmake /mnt/fpga /home/alexander/workspace/aiengine/mlir-air/utils/mlir-aie/cmake/modulesXilinx /home/alexander/workspace/aiengine/mlir-air/utils/llvm /home/alexander/workspace/aiengine/mlir-air/utils/mlir-aie install-aarch64 /home/alexander/workspace/aiengine/mlir-air
+
+RSYNC
+-v verbose
+-r recursive
+-L copy referent symlinks
+-u update, skip files on destination that are newer or equal (unless size different)
+-t preserve modification time
+-vrtuLP
+
+
+export PATH="/home/xilinx/temp/install-aarch64/bin:$PATH"
+export PYTHONPATH="/home/xilinx/temp/install-aarch64/python:/home/xilinx/aiengine/torch-mlir/build/tools/torch-mlir/python_packages/torch_mlir:$PYTHONPATH"
+export LD_LIBRARY_PATH="/home/xilinx/temp/install-aarch64/lib:/opt/xaienginev2/lib:$LD_LIBRARY_PATH"

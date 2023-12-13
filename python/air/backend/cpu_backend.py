@@ -7,8 +7,8 @@ import torch
 import torch_mlir.ir
 from torch_mlir.dynamo import make_simple_dynamo_backend
 
-import air.mlir.ir
-import air.mlir.passmanager
+import air.ir
+import air.passmanager
 
 from torch_mlir_e2e_test.linalg_on_tensors_backends.refbackend import RefBackendLinalgOnTensorsBackend
 
@@ -114,7 +114,7 @@ class AirCpuBackend(AirBackend):
     def __del__(self):
         self.unload()
 
-    def compile(self, air_module: air.mlir.ir.Module, pipeline=None,
+    def compile(self, air_module: air.ir.Module, pipeline=None,
                 verbose=False, segment_offset=None, segment_size=None):
         """Compiles an imported module, with a flat list of functions.
 
@@ -137,19 +137,19 @@ class AirCpuBackend(AirBackend):
         s = str(air_module)
         with air_module.context:
             # make a copy of the input MLIR
-            air_module = air.mlir.ir.Module.parse(s)
+            air_module = air.ir.Module.parse(s)
 
             if verbose:
                 print("Running MLIR pass pipeline: ", pipeline)
 
-            pm = air.mlir.passmanager.PassManager.parse(pipeline)
+            pm = air.passmanager.PassManager.parse(pipeline)
             pm.run(air_module.operation)
 
             if verbose:
                 print("Async Module:")
                 print(air_module)
 
-            pm = air.mlir.passmanager.PassManager.parse(ASYNC_TO_LLVM_PIPELINE)
+            pm = air.passmanager.PassManager.parse(ASYNC_TO_LLVM_PIPELINE)
             pm.run(air_module.operation)
 
             if verbose:
@@ -194,17 +194,17 @@ def make_dynamo_backend(pipeline=None, verbose=False):
             fx_graph, example_inputs,
             output_type=torch_mlir.OutputType.LINALG_ON_TENSORS)
 
-        with air.mlir.ir.Context():
-            air_module = air.mlir.ir.Module.parse(str(mlir_module))
-            pm = air.mlir.passmanager.PassManager.parse(air.compiler.util.LINALG_TENSOR_TO_MEMREF_PIPELINE)
+        with air.ir.Context():
+            air_module = air.ir.Module.parse(str(mlir_module))
+            pm = air.passmanager.PassManager.parse(air.compiler.util.LINALG_TENSOR_TO_MEMREF_PIPELINE)
             pm.run(air_module.operation)
             if pipeline is None:
-                pm = air.mlir.passmanager.PassManager.parse(linalg_on_tensors.LINALG_MEMREF_TO_AIR_PIPELINE)
+                pm = air.passmanager.PassManager.parse(linalg_on_tensors.LINALG_MEMREF_TO_AIR_PIPELINE)
                 pm.run(air_module.operation)
             elif callable(pipeline):
                 air_module = pipeline(air_module)
             else:
-                pm = air.mlir.passmanager.PassManager.parse(pipeline)
+                pm = air.passmanager.PassManager.parse(pipeline)
                 pm.run(air_module.operation)
 
             if verbose:

@@ -2,9 +2,13 @@
 # Copyright (C) 2022, Advanced Micro Devices, Inc. All rights reserved.
 # SPDX-License-Identifier: MIT
 
+message("TEST AIE_INCLUDE_PATH=${AIE_INCLUDE_PATH}")
+list(GET AIE_INCLUDE_DIRS 0 AIE_INCLUDE_PATH)
+set(AIE_INCLUDE_PATH ${AIE_INCLUDE_PATH}/../runtime_lib/test_lib)
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}/include
-    ${AIE_INCLUDE_DIRS}/../runtime_lib/x86_64/test_lib/include
+    ${AIE_INCLUDE_PATH}
 )
 
 add_definitions(-DLIBXAIENGINEV2)
